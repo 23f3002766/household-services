@@ -17,6 +17,23 @@ body {
     height: 100vh;
 }
 
+.btn-secondary {
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    background-color: #f44336; 
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out
+}
+.btn-secondary:hover {
+    background-color: #e53935;
+}
+
 /* Navbar Styling */
 .navbar {
     width: 100%;

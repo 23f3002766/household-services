@@ -15,6 +15,11 @@ def spsignup():
 def login():
     return render_template("login.html")
 
+#Admin Routes
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
 #Customer Routes
 @app.route("/")
 def home():
@@ -23,3 +28,8 @@ def home():
 @app.route("/booking")
 def booking():
     return render_template("booking.html")
+
+#Service Personal Routes
+@app.route("/spdashboard")
+def spdashboard():
+    return render_template("spdashboard.html")
