@@ -12,7 +12,7 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content:space-between;
     align-items: center;
     height: 100vh;
 }
@@ -85,12 +85,16 @@ body {
 .my-container {
     width: 100%;
     max-width: 900px;
+    max-height: min-content;
     margin: 20px auto;
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+   
 }
+
+
 
 .center {
     text-align: center;
@@ -117,7 +121,7 @@ body {
     transform: translateY(-10px); 
 }
 
-.card h3 {
+h3 {
     color: #4CAF50;
     font-size: 24px;
     margin-bottom: 10px;
@@ -141,6 +145,90 @@ body {
 
 .card a:hover {
     background-color: #45a049;
+}
+
+/* Service History */
+#service-history {
+    margin-top: 20px;
+}
+
+#service-history h3 {
+    color: #4CAF50;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Table Styling */
+table {
+    width:100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    text-align: left;
+    padding: 15px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+table td {
+    color: #555;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+table td a {
+    display: inline-block;
+    border: 1px solid #4CAF50;
+    color: #4CAF50;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: transform 0.3s ease-in-out;
+}
+
+table td a:hover {
+    transform: translateY(-5px); 
+}
+
+/* Add rounded corners to the top and bottom of the table */
+table th:first-child,
+table td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+table th:last-child,
+table td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Footer */
+footer {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 3px 0;
+    bottom: 0;
 }
 
 
@@ -189,6 +277,22 @@ body {
     .card a {
         font-size: 14px;
         padding: 8px 12px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    table th {
+        font-size: 14px;
+    }
+
+    footer {
+        font-size: 14px;
     }
 
 }
