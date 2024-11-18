@@ -1,0 +1,21 @@
+#App routes
+from flask import render_template
+from flask import current_app as app
+
+
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@app.route("/spsignup")
+def spsignup():
+    return render_template("spsignup.html")
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+#Customer Routes
+@app.route("/")
+def home():
+    return render_template("home.html")

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/forms.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="my-container">
+        <div class="center">
+            <h1>My Services</h1>
+        </div>
+        <div class="my-panel">
+            <div class="center">
+                <h3>Login</h3>
+            </div>
+            <form action="/login" method="POST">
+                <div class="input-form">
+                    <div class="form-group">
+                        <label for="user_name" class="form-label">UserName</label>
+                        <input type="email" class="form-control" name="user_name" id="user_name" placeholder="johndoe@abcmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="password">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <p>Don't have an account? <a href="/signup">Signup</a></p>
+                        <p><a href="/spsignup">Register as a professional </a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
