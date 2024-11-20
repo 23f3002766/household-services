@@ -30,6 +30,7 @@
     <section id="service-history">
         <h3>Service Booking</h3>
         <table>
+            {%if professionals%}
             <thead>
                 <tr>
                     <th>Service Name</th>
@@ -39,38 +40,17 @@
                 </tr>
             </thead>
             <tbody>
+                {%for prof in professionals%}
                 <tr>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
+                    <td>{{prof.service_type}}</td>
+                    <td>{{prof.name}}</td>
+                    <td>{{prof.phone}}</td>
                     <td><a href="/" class="btn btn-primary">Book</a></td>
                 </tr>
-                <tr>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Book</a></td>
-                </tr>
-                <tr>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Book</a></td>
-                </tr>
-                <tr>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Book</a></td>
-                </tr>
-                <tr>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Book</a></td>
-                </tr>
+                {%endfor%}
             </tbody>
         </table>
+        {%endif%}
     </section>
 </main>
 

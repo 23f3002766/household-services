@@ -29,9 +29,11 @@ class ServiceProfessional(db.Model):
     role = db.Column(db.String(20), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now())
-    service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False) #service type
+    service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False) 
+    service_type = db.Column(db.String, nullable=False)
     experience = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String(240), nullable=True)
+    phone = db.Column(db.Integer, nullable=False)
     pincode = db.Column(db.Integer, nullable=False)
     approved = db.Column(db.Boolean, default=False)  # Admin approval status
     blocked = db.Column(db.Boolean, default=False)  # Admin block status
@@ -60,7 +62,7 @@ class ServiceRequest(db.Model):
     remarks = db.Column(db.Text, nullable=True)
 
 # Relationships
-ServiceProfessional.service = db.relationship('Service', backref='service_professionals', lazy=True)
-Service.service = db.relationship('ServiceRequest', backref='services', lazy=True)
-Customer.customer = db.relationship('ServiceRequest', backref='customers', lazy=True)
-ServiceProfessional.professional = db.relationship('ServiceRequest', backref='service_professionals', lazy=True)
+Service.professional = db.relationship('ServiceProfessional',cascade="all, delete", backref='services', lazy=True)
+Service.service = db.relationship('ServiceRequest',cascade="all, delete", backref='services', lazy=True)
+Customer.customer = db.relationship('ServiceRequest',cascade="all, delete", backref='customers', lazy=True)
+ServiceProfessional.professional = db.relationship('ServiceRequest',cascade="all, delete", backref='service_professionals', lazy=True)

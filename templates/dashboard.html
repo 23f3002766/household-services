@@ -23,7 +23,7 @@
     </div>
 </nav>
 <div class="my-container">
-    <a href="/" class="btn-secondary">Edit/View Profile Details</a>
+    <a href="/editprofile/{{id}}" class="btn-secondary">Edit/View Profile Details</a>
 </div>
 <div class="center">
     <h1>Looking For?</h1> 
@@ -32,44 +32,16 @@
     
     
     <div class="card-container">
-        
+    {%if services%}
+    {%for service in services%}
         <div class="card">
-            <h3>Cleaning Services</h3>
-            <p>Get your home cleaned by professional cleaners.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
+            <h3>{{service.name}}</h3>
+            <p>{{service.description}}</p>
+            <a href="/booking/{{service.id}}" class="btn btn-primary">Learn More</a>
         </div>
-        
-        <div class="card">
-            <h3>Plumbing</h3>
-            <p>Expert plumbing services for your household needs.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
-        </div>
-        
-        <div class="card">
-            <h3>Electrical Repairs</h3>
-            <p>Safe and efficient electrical repair services.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
-        </div>
-        
-        <div class="card">
-            <h3>Carpentry</h3>
-            <p>Get all your carpentry work done with expert hands.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
-        </div>
-
-        <div class="card">
-            <h3>Carpentry</h3>
-            <p>Get all your carpentry work done with expert hands.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
-        </div>
-
-        <div class="card">
-            <h3>Carpentry</h3>
-            <p>Get all your carpentry work done with expert hands.</p>
-            <a href="/booking" class="btn btn-primary">Learn More</a>
-        </div>
-        
-        
+    
+    {%endfor%}       
+    {%endif%}
     </div>
 </div>
 

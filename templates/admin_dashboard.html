@@ -23,12 +23,12 @@
     </div>
 </nav>
 <div class="my-container">
-    <a href="/" class="btn-secondary">Add a new Service</a>
+    <a href="/admin/createservice" class="btn-secondary">Add a new Service</a>
 </div>
 
 <h3>Current Services</h3>
 <main class="my-container">
-
+    {%if services%}
     <section id="service-history">
         
         <table>
@@ -41,32 +41,23 @@
                 </tr>
             </thead>
             <tbody>
+                {%for service in services%}
                 <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>$40 </td>
-                    <td><a href="/" class="btn btn-primary">Edit</a></td>
+                    <td>{{service.id}}</td>
+                    <td>{{service.name}}</td>
+                    <td>$ {{service.price}} </td>
+                    <td><a href="/admin/editservice/{{service.id}}" class="btn btn-primary">Edit</a></td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>$40 </td>
-                    <td><a href="/" class="btn btn-primary">Edit</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>$40 </td>
-                    <td><a href="/" class="btn btn-primary">Edit</a></td>
-                </tr>
+                {%endfor%}
             </tbody>
         </table>
     </section>
+    {%endif%}
 </main>
 
 <h3>Professionals</h3>
 <main class="my-container">
-
+    {%if services%}
     <section id="service-history">
         
         <table>
@@ -80,37 +71,19 @@
                 </tr>
             </thead>
             <tbody>
+                {%for prof in professionals%}
                 <tr>
-                    <td>1</td>
-                    <td>Jane</td>
-                    <td>4</td>
-                    <td>House Cleaning</td>
+                    <td>{{prof.id}}</td>
+                    <td>{{prof.name}}</td>
+                    <td>{{prof.experience}}</td>
+                    <td>{{prof.service_type}}</td>
                     <td><a href="/" class="btn btn-primary">Approve</a></td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jane</td>
-                    <td>4</td>
-                    <td>House Cleaning</td>
-                    <td><a href="/" class="btn btn-primary">Approve</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jane</td>
-                    <td>4</td>
-                    <td>House Cleaning</td>
-                    <td><a href="/" class="btn btn-primary">Approve</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jane</td>
-                    <td>4</td>
-                    <td>House Cleaning</td>
-                    <td><a href="/" class="btn btn-primary">Approve</a></td>
-                </tr>
+                {%endfor%}
             </tbody>
         </table>
     </section>
+    {%endif%}
 </main>
 
 <h3>Services Requests</h3>

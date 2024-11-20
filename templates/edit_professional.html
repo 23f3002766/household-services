@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/forms.css">
+    <title>Edit Profile</title>
+</head>
+<body>
+    <div class="my-container">
+        <div class="center">
+            <h1>My Services</h1>
+        </div>
+        <div class="my-panel">
+            <div class="center">
+                <h3>Edit Profile</h3>
+            </div>
+            <form action="/editprofessional/{{user.id}}" method="POST">
+                <div class="input-form">
+                    <div class="form-group">
+                        <label for="user_name" class="form-label">User Name</label>
+                        <input type="email" class="form-control" name="user_name" id="user_name" value="{{user.username}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" value="{{user.password}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" id="full_name" value="{{user.name}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience" class="form-label">Experience(yrs)</label>
+                        <input type="text" class="form-control" name="experience" id="experience" value="{{user.experience}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="location" class="form-label">Address</label>
+                        <textarea class="form-control" rows="4" cols="50" name="location" id="location" value="{{user.address}}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" name="phone" id="phone" value="{{user.phone}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="pin_code" class="form-label">Pin Code</label>
+                        <input type="text" class="form-control" name="pin_code" id="pin_code" value="{{user.pincode}}">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Edit Profile</button>
+                        <a class="btn btn-secondary" href="/deleteprofessional/{{user.id}}">Delete</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 A to Z Household Services. All rights reserved.</p>
+    </footer>
+</body>
+</html>
