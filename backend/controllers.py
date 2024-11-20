@@ -1,7 +1,7 @@
 #App routes
 from flask import render_template,redirect,request,url_for
 from app import app
-from .models import db,User,ServiceProfessional,Customer,Service
+from .models import db,User,ServiceProfessional,Customer,Service,ServiceRequest
 
 #Admin Routes
 @app.route("/admin/login", methods=['GET','POST'])
@@ -157,11 +157,11 @@ def delete_profile(id):
     delete_customer(id)
     return redirect(url_for("login"))
 
-@app.route("/booking/<id>")
-def booking(id):
-    professionals = ServiceProfessional.query.filter_by(service_id=id).all()
+@app.route("/booking/<name>/<uid>/<sid>")
+def booking(name,uid,sid):
+    professionals = ServiceProfessional.query.filter_by(service_id=sid).all()
     print(professionals)
-    return render_template("booking.html",id=id,professionals=professionals)
+    return render_template("booking.html",name=name,uid=uid,sid=sid,professionals=professionals)
 
 #Service Personal Routes
 @app.route("/spsignup", methods = ['GET','POST'])
@@ -270,6 +270,21 @@ def edit_professional(id):
 def delete_professional(id):
     delete_professional(id)
     return redirect(url_for("splogin"))
+
+
+#Service Request Routes
+@app.route('/servicereq/create/<name>/<uid>/<pid>/<sid>', methods = ['GET','POST'])
+def create_service_req(name,uid,pid,sid):
+    print(uid,pid,sid)
+    service_req = ServiceRequest(
+        service_id = int(sid),
+        customer_id = int(uid),
+        professional_id = int(pid)  
+    )
+    db.session.add(service_req)
+    db.session.commit()
+    print('Booking successfull')
+    return redirect(url_for('booking',name=name,uid=uid,sid=sid))
 
 #Admin Helper Functions
 def get_services():

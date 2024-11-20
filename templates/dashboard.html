@@ -29,17 +29,15 @@
     <h1>Looking For?</h1> 
 </div>
 <div class="my-container">
-    
-    
+
     <div class="card-container">
     {%if services%}
     {%for service in services%}
         <div class="card">
             <h3>{{service.name}}</h3>
             <p>{{service.description}}</p>
-            <a href="/booking/{{service.id}}" class="btn btn-primary">Learn More</a>
-        </div>
-    
+            <a href="/booking/{{name}}/{{id}}/{{service.id}}" class="btn btn-primary">Learn More</a>
+        </div>  
     {%endfor%}       
     {%endif%}
     </div>
