@@ -57,7 +57,7 @@
 
 <h3>Professionals</h3>
 <main class="my-container">
-    {%if services%}
+    {%if professionals%}
     <section id="service-history">
         
         <table>
@@ -88,7 +88,7 @@
 
 <h3>Services Requests</h3>
 <main class="my-container">
-
+    {%if serv_reqs%}
     <section id="service-history">
         
         <table>
@@ -101,27 +101,18 @@
                 </tr>
             </thead>
             <tbody>
+                {%for req in serv_reqs%}
                 <tr>
-                    <td>1</td>
-                    <td>John</td>
-                    <td>03/08/24</td>
-                    <td>Accepted</td>
+                    <td>{{req.id}}</td>
+                    <td>{{req.professional_name}}</td>
+                    <td>{{req.date_of_request}}</td>
+                    <td>{{req.service_status}}</td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>John</td>
-                    <td>03/08/24</td>
-                    <td>Accepted</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>John</td>
-                    <td>03/08/24</td>
-                    <td>Accepted</td>
-                </tr>
+                {%endfor%}
             </tbody>
         </table>
     </section>
+    {%endif%}
 </main>
 
 <footer>

@@ -20,7 +20,20 @@ def admin_login():
 def admin_dashboard():
     services = get_services()
     professionals = get_professionals()
-    return render_template("admin_dashboard.html",services=services,professionals=professionals)
+    serv_reqs = get_service_reqs()
+
+    #formating for frontend
+    for req in serv_reqs:
+        req.date_of_request = str(req.date_of_request).split(' ')[0]
+
+        # Get the professional name using the professional_id in ServiceRequest
+        if req.professional_id:
+            professional = ServiceProfessional.query.get(req.professional_id)
+            req.professional_name = professional.name if professional else "Unassigned"
+        else:
+            req.professional_name = "Unassigned"
+        
+    return render_template("admin_dashboard.html",serv_reqs=serv_reqs,services=services,professionals=professionals)
 
 @app.route("/admin/createservice", methods=['GET','POST'])
 def admin_create_service():
@@ -325,3 +338,8 @@ def delete_customer(id):
     db.session.delete(user)
     db.session.commit()
     return
+
+#Service request Helper Functions
+def get_service_reqs():
+    service_reqs = ServiceRequest.query.all()
+    return service_reqs
