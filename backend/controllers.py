@@ -112,6 +112,7 @@ def admin_delete_user(id):
 def prof_aprov(id):
     prof = get_professional(id)
     prof.approved = True
+    prof.blocked = False
     prof.verified = True
     db.session.commit()
     return redirect(url_for("admin_dashboard"))
@@ -119,6 +120,10 @@ def prof_aprov(id):
 @app.route("/admin/rejaprov/<id>")
 def prof_rej(id):
     prof = get_professional(id)
+    reqs = get_service_requests_for_prof(id)
+    for req,user in reqs:
+        delete_req(req.id)
+
     if prof.approved:
         prof.approved = False
     prof.blocked = True
@@ -563,3 +568,9 @@ def get_service_requests_for_prof(pid):
         .all()
     )
     return serv_reqs
+
+def delete_req(id):
+    req = get_req(id)
+    db.session.delete(req)
+    db.session.commit()
+    return

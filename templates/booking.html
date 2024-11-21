@@ -42,15 +42,21 @@
             </thead>
             <tbody>
                 {%for prof in professionals%}
+                {%if prof.approved%}
                 <tr>
                     <td>{{prof.service_type}}</td>
                     <td>{{prof.name}}</td>
                     <td>{{prof.phone}}</td>
                     <form action="/servicereq/create/{{name}}/{{uid}}/{{prof.id}}/{{sid}}" method="POST">
                         <td><input type="datetime-local" name="date" id="date"></td>
+                        {%if prof.blocked%}
+                        <td>Blocked</td>
+                        {%else%}
                         <td><button class="btn-edit">Book</button></td>
+                        {%endif%}
                     </form>
                 </tr>
+                {%endif%}
                 {%endfor%}
             </tbody>
         </table>
