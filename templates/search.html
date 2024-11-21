@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Household Services</title>
     <link rel="stylesheet" href="/static/main.css"> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
 </head>
 <body>
 
@@ -14,23 +16,30 @@
         <span>Welcome to Customer</span> 
     </div>
     <ul class="navbar-links">
-        <li><a href="/dashboard/{{uid}}/{{name}}">Home</a></li>
-        <li><a href="/search">Search</a></li>
+        <li><a href="/dashboard/{{id}}/{{name}}">Home</a></li>
+        <li><a href="#">Search</a></li>
         <li><a href="/summary">Summary</a></li>
     </ul>
     <div class="navbar-right">
-        <a href="/" class="btn btn-logout">Logout</a> 
+        <a href="/logout" class="btn btn-logout">Logout</a> 
     </div>
 </nav>
 
-
+<form class="d-flex" method="POST" action="/search/{{id}}/{{name}}">
+    <select name="filter_category" id="filter_category">
+        <option>Address</option>
+        <option>Service</option>
+    </select>
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_txt" id="search_txt">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
 
 <main class="my-container">
 
     <section id="service-history">
         <h3>Service Booking</h3>
         <table>
-            {%if professionals%}
+            {%if results%}
             <thead>
                 <tr>
                     <th>Service Name</th>
@@ -41,13 +50,13 @@
                 </tr>
             </thead>
             <tbody>
-                {%for prof in professionals%}
+                {%for prof in results%}
                 {%if prof.approved%}
                 <tr>
                     <td>{{prof.service_type}}</td>
                     <td>{{prof.name}}</td>
                     <td>{{prof.phone}}</td>
-                    <form action="/servicereq/create/{{name}}/{{uid}}/{{prof.id}}/{{sid}}" method="POST">
+                    <form action="/servicereq/create/{{name}}/{{id}}/{{prof.id}}/{{prof.service_id}}" method="POST">
                         <td><input type="datetime-local" name="date" id="date"></td>
                         {%if prof.blocked%}
                         <td>Blocked</td>

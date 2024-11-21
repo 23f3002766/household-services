@@ -185,7 +185,9 @@ def login():
         pwd = request.form.get('password')
         user = Customer.query.filter_by(username=user, password=pwd).first()
         if user and user.role == 'customer':
-            return redirect(url_for('dashboard',name=user.name,id=user.id))
+            services = get_services()
+            reqs = get_service_requests_for_user(user.id)
+            return redirect(url_for('dashboard',name=user.name,id=user.id,services=services,reqs=reqs))
         print('Invalid credentials!')
     return render_template("login.html")
 
@@ -574,3 +576,47 @@ def delete_req(id):
     db.session.delete(req)
     db.session.commit()
     return
+
+#Search functionality
+@app.route("/search/<id>/<name>",methods=["GET","POST"])
+def search(id,name):
+    if request.method=="POST":
+        search_txt=request.form.get("search_txt")
+        opt = request.form.get('filter_category')
+        
+
+        if str(opt) == 'Address':
+            by_add=search_by_address(search_txt)
+            print(by_add)
+            return render_template("search.html",results=by_add,id=id,name=name)
+        elif str(opt) == 'Service':       
+            by_type=search_by_service_type(search_txt)
+            print(by_type) 
+            return render_template("search.html",results=by_type,id=id,name=name)
+
+    return render_template("search.html",id=id,name=name)
+
+@app.route("/admin/search",methods=["GET","POST"])
+def admin_search():
+    if request.method=="POST":
+        search_txt=request.form.get("search_txt")
+        opt = request.form.get('filter_category')  
+
+        if str(opt) == 'Address':
+            by_add=search_by_address(search_txt)
+            print(by_add)
+            return render_template("admin_search.html",results=by_add)
+        elif str(opt) == 'Service':       
+            by_type=search_by_service_type(search_txt)
+            print(by_type) 
+            return render_template("admin_search.html",results=by_type)
+
+    return render_template("admin_search.html")
+
+def search_by_address(search_txt):
+    profs=ServiceProfessional.query.filter(ServiceProfessional.name.ilike(f"%{search_txt}%")).all()
+    return profs
+
+def search_by_service_type(search_txt):
+   profs=ServiceProfessional.query.filter(ServiceProfessional.service_type.ilike(f"%{search_txt}%")).all()
+   return profs
