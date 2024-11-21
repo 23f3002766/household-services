@@ -15,7 +15,7 @@
             <div class="center">
                 <h3>Professional Signup</h3>
             </div>
-            <form action="/spsignup" method="POST">
+            <form action="/spsignup" method="POST" enctype="multipart/form-data">
                 <div class="input-form">
                     <div class="form-group">
                         <label for="user_name" class="form-label">User Name</label>
@@ -42,8 +42,8 @@
                         <input type="text" class="form-control" name="experience" id="experience" placeholder="5">
                     </div>
                     <div class="form-group">
-                        <label for="vdoc" class="form-label">Verification Documents</label>
-                        <input type="file" class="form-control" name="vdoc" id="vdoc">
+                        <label for="vdoc"  class="form-label"  >Verification Documents</label>
+                        <input type="file" accept=".pdf" class="form-control" name="vdoc" id="vdoc" required>
                     </div>
                     <div class="form-group">
                         <label for="location" class="form-label">Address</label>

@@ -1,8 +1,20 @@
 #App routes
-from flask import render_template,redirect,request,url_for
+from flask import render_template,redirect,request,url_for,send_from_directory
 from app import app
 from .models import db,User,ServiceProfessional,Customer,Service,ServiceRequest
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = 'uploads/professional_pdfs'
+ALLOWED_EXTENSIONS = {'pdf'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Helper to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 #Admin Routes
 @app.route("/admin/login", methods=['GET','POST'])
@@ -113,6 +125,22 @@ def prof_rej(id):
     prof.verified = True
     db.session.commit()
     return redirect(url_for("admin_dashboard"))
+
+@app.route('/admin/viewpdf/<professional_id>')
+def view_pdf(professional_id):
+    professional = ServiceProfessional.query.filter_by(id=professional_id).first()
+    if professional and professional.pdf_path:
+        directory = os.path.dirname(professional.pdf_path)  # Extract the folder path
+        filename = os.path.basename(professional.pdf_path)  # Extract the file name
+        try:
+            return send_from_directory(
+                directory=directory,
+                path=filename,
+                as_attachment=False  # Set to True if you want the browser to download the file
+            )
+        except FileNotFoundError:
+            return "File not found!", 404
+    return "Professional or document not found!", 404
 
 #Customer Routes
 @app.route("/signup", methods=['GET','POST'])
@@ -284,7 +312,6 @@ def spsignup():
         phone = request.form.get('phone')
         pin = request.form.get('pin_code')
         service = service.split('|')
-        print(service[0])
         # Check if the username already exists
         if ServiceProfessional.query.filter_by(username=user).first():
             print('Username already exists!', 'error')
@@ -292,6 +319,19 @@ def spsignup():
 
         service_id = service[0].strip()
         service_type = service[1].strip()
+        #saving file path
+        pdf = request.files.get('vdoc')
+        print("Uploaded file:",pdf)
+        if pdf and allowed_file(pdf.filename):
+            if not os.path.exists(app.config['UPLOAD_FOLDER']):
+                os.makedirs(app.config['UPLOAD_FOLDER'])
+            filename = secure_filename(pdf.filename)
+            pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            pdf.save(pdf_path)
+        else:
+            print("Please upload a valid PDF.", "error")
+            return redirect(url_for('spsignup'))
+        
         # Create ServiceProfessional with user_id and service_id       
         new_professional = ServiceProfessional(
             username= user, 
@@ -303,7 +343,8 @@ def spsignup():
             phone=int(phone),
             pincode=int(pin),
             service_id= int(service_id),
-            service_type= service_type
+            service_type= service_type,
+            pdf_path=pdf_path
         )
         db.session.add(new_professional)
         try:

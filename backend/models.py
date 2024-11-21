@@ -35,6 +35,7 @@ class ServiceProfessional(db.Model):
     address = db.Column(db.String(240), nullable=True)
     phone = db.Column(db.Integer, nullable=False)
     pincode = db.Column(db.Integer, nullable=False)
+    pdf_path = db.Column(db.String(300), nullable=False)
     approved = db.Column(db.Boolean, default=False)  # Admin approval status
     blocked = db.Column(db.Boolean, default=False)  # Admin block status
 

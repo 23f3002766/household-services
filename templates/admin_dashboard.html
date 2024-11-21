@@ -78,7 +78,10 @@
                     <td>{{prof.name}}</td>
                     <td>{{prof.experience}}</td>
                     <td>{{prof.service_type}}</td>
-                    <td><input type="file"></td>
+                    <td>
+                        <a href="{{ url_for('view_pdf', professional_id=prof.id) }}" target="_blank">
+                        View PDF</a>
+                    </td>
                     {%if prof.approved%}
                     <td><a href="/admin/rejaprov/{{prof.id}}" class="btn-secondary">Block</a></td>
                     {%else%}
