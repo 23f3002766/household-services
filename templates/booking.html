@@ -36,7 +36,8 @@
                     <th>Service Name</th>
                     <th>Professional Name</th>
                     <th>Phone</th>
-                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Book</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,7 +46,10 @@
                     <td>{{prof.service_type}}</td>
                     <td>{{prof.name}}</td>
                     <td>{{prof.phone}}</td>
-                    <td><a href="/servicereq/create/{{name}}/{{uid}}/{{prof.id}}/{{sid}}" class="btn btn-primary">Book</a></td>
+                    <form action="/servicereq/create/{{name}}/{{uid}}/{{prof.id}}/{{sid}}" method="POST">
+                        <td><input type="datetime-local" name="date" id="date"></td>
+                        <td><button class="btn-edit">Book</button></td>
+                    </form>
                 </tr>
                 {%endfor%}
             </tbody>

@@ -2,6 +2,7 @@
 from flask import render_template,redirect,request,url_for
 from app import app
 from .models import db,User,ServiceProfessional,Customer,Service,ServiceRequest
+from datetime import datetime
 
 #Admin Routes
 @app.route("/admin/login", methods=['GET','POST'])
@@ -21,7 +22,7 @@ def admin_dashboard():
     services = get_services()
     professionals = get_professionals()
     serv_reqs = get_service_reqs()
-
+    customers = get_customers()
     #formating for frontend
     for req in serv_reqs:
         req.date_of_request = str(req.date_of_request).split(' ')[0]
@@ -33,7 +34,7 @@ def admin_dashboard():
         else:
             req.professional_name = "Unassigned"
         
-    return render_template("admin_dashboard.html",serv_reqs=serv_reqs,services=services,professionals=professionals)
+    return render_template("admin_dashboard.html",serv_reqs=serv_reqs,services=services,professionals=professionals,customers=customers)
 
 @app.route("/admin/createservice", methods=['GET','POST'])
 def admin_create_service():
@@ -90,6 +91,28 @@ def admin_delete_service(id):
     delete_service(id)
     return redirect(url_for("admin_dashboard"))
 
+@app.route("/admin/deleteuser/<id>", methods=['GET','POST'])
+def admin_delete_user(id):
+    delete_customer(id)
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/profaprov/<id>")
+def prof_aprov(id):
+    prof = get_professional(id)
+    prof.approved = True
+    prof.verified = True
+    db.session.commit()
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/rejaprov/<id>")
+def prof_rej(id):
+    prof = get_professional(id)
+    if prof.approved:
+        prof.approved = False
+    prof.blocked = True
+    prof.verified = True
+    db.session.commit()
+    return redirect(url_for("admin_dashboard"))
 
 #Customer Routes
 @app.route("/signup", methods=['GET','POST'])
@@ -136,7 +159,17 @@ def login():
 @app.route("/dashboard/<id>/<name>")
 def dashboard(id,name):
     services = get_services()
-    return render_template("dashboard.html",name=name,id=id,services=services)
+    reqs = get_service_requests_for_user(id)
+    for req in reqs:
+        req.date_of_request = str(req.date_of_request).split(' ')
+        req.date_of_request = req.date_of_request[0].strip()
+
+        if req.date_of_completion:
+            req.date_of_completion = str(req.date_of_completion).split(' ')
+            req.date_of_completion = req.date_of_completion[0].strip()
+        else:
+            req.date_of_completion = 'DND'
+    return render_template("dashboard.html",name=name,id=id,services=services,reqs=reqs)
 
 @app.route("/editprofile/<id>", methods=['GET','POST'])
 def edit_profile(id):
@@ -160,10 +193,54 @@ def edit_profile(id):
             customer.pincode = int(pin_code)
         customer.verified = True  
         db.session.commit()
-        return redirect(url_for("dashboard",name = customer.name,id=customer.id)) 
+        services = get_services()
+        reqs = get_service_requests_for_user(id)
+        return redirect(url_for("dashboard",name = customer.name,id=customer.id,services=services,reqs=reqs)) 
 
          
     return render_template("edit_profile.html",user=customer)
+
+@app.route("/editreq/<uid>/<id>", methods=['GET','POST'])
+def edit_req(uid,id):
+
+    services = get_services()
+    customer = get_customer(uid)
+    reqs = get_service_requests_for_user(uid)
+
+    if request.method == 'POST':
+        date = request.form.get('date')
+        
+        if date:
+            formatted_date = datetime.strptime(date.strip("[]"), "%Y-%m-%dT%H:%M")
+            req = get_req(id)
+            req.date_of_request = formatted_date
+            req.verified = True
+            db.session.commit()
+            print("date changed successfully!!!")
+            return redirect(url_for("dashboard",name = customer.name,id=customer.id,services=services,reqs=reqs))
+            
+    return redirect(url_for("dashboard",name = customer.name,id=customer.id,services=services,reqs=reqs))
+
+
+@app.route("/addremark/<uid>/<name>/<id>", methods=['GET','POST'])
+def add_remark(uid,name,id):
+
+    services = get_services()
+    customer = get_customer(uid)
+    reqs = get_service_requests_for_user(uid)
+
+    if request.method == 'POST':
+        remark = request.form.get('remark')
+        
+        if remark:
+            req = get_req(id)
+            req.remarks = remark
+            req.verified = True
+            db.session.commit()
+            print("Rating added successfully!!!")
+            return redirect(url_for("dashboard",name = name,id=customer.id,services=services,reqs=reqs))
+            
+    return redirect(url_for("dashboard",name = customer.name,id=customer.id,services=services,reqs=reqs))
 
 @app.route("/deleteuser/<id>", methods=['GET','POST'])
 def delete_profile(id):
@@ -175,6 +252,23 @@ def booking(name,uid,sid):
     professionals = ServiceProfessional.query.filter_by(service_id=sid).all()
     print(professionals)
     return render_template("booking.html",name=name,uid=uid,sid=sid,professionals=professionals)
+
+@app.route("/closereq/<uid>/<name>/<id>")
+def close_req(uid,name,id):
+    req = get_req(id)
+    if req.service_status == 'assigned':
+        req.service_status = 'closed'
+        req.date_of_completion = datetime.now()
+        req.verified = True
+        db.session.commit()
+        print('req closed!!')
+        if req.date_of_completion:
+            req.date_of_completion = str(req.date_of_completion).split(' ')
+            req.date_of_completion = req.date_of_completion[0]
+
+        return redirect(url_for("dashboard",id=uid,name=name))
+    print('req did not close!!')
+    return redirect(url_for("dashboard",id=uid,name=name))
 
 #Service Personal Routes
 @app.route("/spsignup", methods = ['GET','POST'])
@@ -224,9 +318,7 @@ def spsignup():
             db.session.commit()
 
         return redirect(url_for('spsignup'))
-    
-
-        
+          
     services = get_services()
     return render_template("spsignup.html",services=services)
 
@@ -237,13 +329,27 @@ def splogin():
         pwd = request.form.get('password')
         user = ServiceProfessional.query.filter_by(username=user, password=pwd).first()
         if user and user.role == 'professional':
-            return redirect(url_for('spdashboard',id = user.id))
+            return redirect(url_for('spdashboard',id = user.id,prof=user))
         print('Invalid credentials!')
     return render_template("splogin.html")
 
 @app.route("/spdashboard/<id>")
 def spdashboard(id):
-    return render_template("spdashboard.html",id=id)
+
+    serv_reqs = get_service_requests_for_prof(id)
+    prof = get_professional(id)
+    for req,user in serv_reqs:
+        print(req,user)
+        req.customer = get_customer(req.customer_id)
+        req.service = get_service(req.service_id)
+        print(req.customer,req.service)
+    
+    for req,user in serv_reqs:
+        if req.date_of_completion:
+            req.date_of_completion = str(req.date_of_completion).split(' ')
+            req.date_of_completion = req.date_of_completion[0]
+
+    return render_template("spdashboard.html",id=id,reqs=serv_reqs,prof = prof)
 
 @app.route("/editprofessional/<id>", methods=['GET','POST'])
 def edit_professional(id):
@@ -274,7 +380,7 @@ def edit_professional(id):
 
         professional.verified = True  
         db.session.commit()
-        return redirect(url_for("spdashboard",id=professional.id)) 
+        return redirect(url_for("spdashboard",id=professional.id,prof=professional)) 
 
     return render_template("edit_professional.html",user=professional)
 
@@ -284,15 +390,52 @@ def delete_professional(id):
     delete_professional(id)
     return redirect(url_for("splogin"))
 
+@app.route("/acceptreq/<pid>/<sid>")
+def req_aprov(pid,sid):
+    req = get_req(sid)
+    prof = get_professional(pid)
+    if req.service_status == 'requested':
+        req.service_status = 'assigned'
+        req.verified = True
+        db.session.commit()
+        print('assigned sucessfully!!!')
+        return redirect(url_for("spdashboard",id=pid,prof = prof))
+    if req.service_status == 'closed':
+        print('Req Closed!!')
+        return redirect(url_for("spdashboard",id=pid,prof = prof))
+    print('Already assigned')
+    return redirect(url_for("spdashboard",id=pid,prof = prof))
+
 
 #Service Request Routes
 @app.route('/servicereq/create/<name>/<uid>/<pid>/<sid>', methods = ['GET','POST'])
 def create_service_req(name,uid,pid,sid):
-    print(uid,pid,sid)
-    service_req = ServiceRequest(
+
+    date = request.form.get('date')   
+    
+    reqs = get_service_requests_for_user(uid)
+    for req in reqs:
+        if str(req.service_status)  in ["assigned", "requested"]:  
+            if str(req.professional_id) == str(pid):
+                print(req.professional_id,pid)
+                print("hi From")
+                print("Request already underway by the professional")
+                return redirect(url_for('booking',name=name,uid=uid,sid=sid))
+        
+
+    if date:
+        formatted_date = datetime.strptime(date.strip("[]"), "%Y-%m-%dT%H:%M")
+        service_req = ServiceRequest(
         service_id = int(sid),
         customer_id = int(uid),
-        professional_id = int(pid)  
+        professional_id = int(pid),
+        date_of_request = formatted_date  
+    )
+    else :
+        service_req = ServiceRequest(
+        service_id = int(sid),
+        customer_id = int(uid),
+        professional_id = int(pid) 
     )
     db.session.add(service_req)
     db.session.commit()
@@ -310,6 +453,11 @@ def get_service(id):
 def delete_service(id):
     service = get_service(id)
     db.session.delete(service)
+    db.session.commit()
+    return
+def delete_user(id):
+    user = get_customer(id)
+    db.session.delete(user)
     db.session.commit()
     return
 
@@ -333,13 +481,44 @@ def get_customer(id):
     user = Customer.query.filter_by(id=id).first()
     return user
 
+def get_customers():
+    customers = Customer.query.all()
+    return customers
+
 def delete_customer(id):
     user = get_customer(id)
     db.session.delete(user)
     db.session.commit()
     return
 
+def get_service_requests_for_user(uid):
+    serv_reqs = (
+        db.session.query(ServiceRequest)
+        .join(Customer, ServiceRequest.customer_id == Customer.id)
+        .filter(Customer.id == uid)
+        .all()
+    )
+    for req in serv_reqs:
+        print(req)
+        req.prof = get_professional(req.professional_id)
+        req.service = get_service(req.service_id)
+        print(req.prof,req.service)
+    return serv_reqs
+
 #Service request Helper Functions
 def get_service_reqs():
     service_reqs = ServiceRequest.query.all()
     return service_reqs
+
+def get_req(id):
+    req = ServiceRequest.query.filter_by(id=id).first()
+    return req
+
+def get_service_requests_for_prof(pid):
+    serv_reqs = (
+        db.session.query(ServiceRequest , ServiceProfessional.username)
+        .join(ServiceProfessional, ServiceRequest.professional_id == ServiceProfessional.id)
+        .filter(ServiceProfessional.id == pid)
+        .all()
+    )
+    return serv_reqs

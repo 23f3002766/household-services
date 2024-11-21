@@ -14,7 +14,7 @@
         <span>Welcome to {{name}}</span> 
     </div>
     <ul class="navbar-links">
-        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard/{{id}}/{{name}}">Home</a></li>
         <li><a href="/search">Search</a></li>
         <li><a href="/summary">Summary</a></li>
     </ul>
@@ -43,11 +43,10 @@
     </div>
 </div>
 
-<h3>Service History</h3>
+<h3>Accepted Service Requests</h3>
 <main class="my-container">
-
-    <section id="service-history">
-        
+    {%if reqs%}
+    <section id="service-history">    
         <table>
             <thead>
                 <tr>
@@ -59,44 +58,96 @@
                 </tr>
             </thead>
             <tbody>
+                {%for req in reqs%}
+                {%if req.service_status == 'assigned'%}
                 <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td><a href="/" class="btn btn-primary">In Progress</a></td>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.prof.name}}</td>
+                    <td>{{req.prof.phone}}</td>
+                    <td><a href="/closereq/{{id}}/{{name}}/{{req.id}}"class="btn btn-danger">{{req.service_status}}</td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">In Progress</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">In Progress</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Completed</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>AC Repair</td>
-                    <td>Jane Smith</td>
-                    <td>987-654-3210</td>
-                    <td><a href="/" class="btn btn-primary">Completed</a></td>
-                </tr>
+                {%endif%}
+                {%endfor%}
             </tbody>
         </table>
     </section>
+    {%endif%}
+</main>
+
+<h3>Edit Requests</h3>
+<main class="my-container">
+    {%if reqs%}
+    <section id="service-history">    
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Professional Name</th>
+                    <th>Phone</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for req in reqs%}
+                {%if req.service_status == 'requested'%}
+                <tr>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.prof.name}}</td>
+                    <td>{{req.prof.phone}}</td>
+                    <form action="/editreq/{{id}}/{{req.id}}" method="POST">
+                        <td>{{req.date_of_request}}<input type="datetime-local" name="date" id="date"></td>
+                        <td><button type='submit' class="btn-edit" >Edit</button></td>
+                    </form>
+                </tr>
+                {%endif%}
+                {%endfor%}
+            </tbody>
+        </table>
+    </section>
+    {%endif%}
+</main>
+
+<h3>Service History</h3>
+<main class="my-container" >
+    {%if reqs%}
+    <section id="service-history" >    
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Professional Name</th>
+                    <th>Phone</th>
+                    <th>Date</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for req in reqs%}
+                {%if req.service_status == 'closed'%}
+                <tr>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.prof.name}}</td>
+                    <td>{{req.prof.phone}}</td>
+                    <td>{{req.date_of_completion}}</td>
+                    <form action="/addremark/{{id}}/{{name}}/{{req.id}}" method="POST">
+                        <td>
+                            <input type="number" name='remark' id='remark' value="{{req.remarks}}" style="background-color:greenyellow ;color: rgb(6, 7, 7);border-radius:1em;border: none;padding: 1rem;"/>
+                            <button type="submit" class="btn-edit" style="padding: 5px;">&#10003;</button>
+                        </td>
+                    </form>
+                </tr>
+                {%endif%}
+                {%endfor%}
+            </tbody>
+        </table>
+    </section>
+    {%endif%}
 </main>
 
 <footer>

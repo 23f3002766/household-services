@@ -14,7 +14,7 @@
         <span>Welcome to Admin</span> 
     </div>
     <ul class="navbar-links">
-        <li><a href="/">Home</a></li>
+        <li><a href="/admin/dashboard">Home</a></li>
         <li><a href="/search">Search</a></li>
         <li><a href="/summary">Summary</a></li>
     </ul>
@@ -67,6 +67,7 @@
                     <th>Name</th>
                     <th>Experience(yrs)</th>
                     <th>Service Name</th>
+                    <th>Docs</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -77,7 +78,45 @@
                     <td>{{prof.name}}</td>
                     <td>{{prof.experience}}</td>
                     <td>{{prof.service_type}}</td>
-                    <td><a href="/" class="btn btn-primary">Approve</a></td>
+                    <td><input type="file"></td>
+                    {%if prof.approved%}
+                    <td><a href="/admin/rejaprov/{{prof.id}}" class="btn-secondary">Block</a></td>
+                    {%else%}
+                    <td>
+                        <a href="/admin/profaprov/{{prof.id}}" class="btn btn-primary">&#10003;</a>
+                        <a href="/admin/rejaprov/{{prof.id}}" class="btn-danger">&#10005;</a>
+                    </td>
+                    {%endif%}
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </section>
+    {%endif%}
+</main>
+
+<h3>Customers</h3>
+<main class="my-container">
+    {%if customers%}
+    <section id="service-history">     
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Pin Code</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for customer in customers%}
+                <tr>
+                    <td>{{customer.id}}</td>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.address}}</td>
+                    <td>{{customer.pincode}}</td>
+                    <td><a href="/admin/deleteuser/{{customer.id}}" class="btn-secondary">Block</a></td>
                 </tr>
                 {%endfor%}
             </tbody>

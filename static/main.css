@@ -17,6 +17,8 @@ body {
     height: 100vh;
 }
 
+
+
 .btn-secondary {
     display: inline-block;
     width: 100%;
@@ -28,10 +30,39 @@ body {
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
+    border: none;
     transition: transform 0.3s ease-in-out
 }
 .btn-secondary:hover {
     background-color: #e53935;
+}
+
+.btn-danger {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    font-size: 16px;
+    background-color: #f44336; 
+    color: white;
+    padding: auto;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.3s ease-in-out
+}
+.btn-danger:hover {
+    background-color: #e53935;
+}
+
+.btn-edit {
+    padding: 1rem 2rem;
+    background-color: greenyellow;
+    border-radius: 8%;
+    transition: transform 0.3s ease-in-out
+}
+.btn-edit:hover {
+
+    background-color: rgb(153, 255, 1);
 }
 
 /* Navbar Styling */

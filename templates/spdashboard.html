@@ -14,7 +14,7 @@
         <span>Welcome to Service Professional</span> 
     </div>
     <ul class="navbar-links">
-        <li><a href="/">Home</a></li>
+        <li><a href="#">Home</a></li>
         <li><a href="/search">Search</a></li>
         <li><a href="/summary">Summary</a></li>
     </ul>
@@ -26,102 +26,124 @@
     <a href="/editprofessional/{{id}}" class="btn-secondary">Edit/View Profile Details</a>
 </div>
 
+{%if prof.blocked == 0%}
+{%if prof.approved%}
 <h3>Service Requests</h3>
 <main class="my-container">
 
     <section id="service-history">
-        
+        {%if reqs%}
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Service Name</th>
                     <th>Customer Name</th>
-                    <th>Phone</th>
+                    <th>Pincode</th>
                     <th>Address</th>
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
+                {%for req,user in reqs%}
+                {%if req.service_status == 'requested'%}
                 <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td><a href="/" class="btn btn-primary">Accept</a></td>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.customer.name}}</td>
+                    <td>{{req.customer.pincode}}</td>
+                    <td>{{req.customer.address}}</td>
+                    <td><a href="/acceptreq/{{id}}/{{req.id}}" class="btn btn-primary">Accept</a></td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td><a href="/" class="btn btn-primary">Accept</a></td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td><a href="/" class="btn btn-primary">Accept</a></td>
-                </tr>
+                {%endif%}
+                {%endfor%}
             </tbody>
         </table>
+        {%endif%}
     </section>
 </main>
 
-<h3>Closed Services</h3>
+<h3>Accepted Requests</h3>
 <main class="my-container">
 
     <section id="service-history">
-        
+        {%if reqs%}
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Service Name</th>
                     <th>Customer Name</th>
-                    <th>Phone</th>
+                    <th>Pincode</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for req,user in reqs%}
+                {%if req.service_status == 'assigned'%}
+                <tr>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.customer.name}}</td>
+                    <td>{{req.customer.pincode}}</td>
+                    <td>{{req.customer.address}}</td>
+                    <td>{{req.service_status}}</td>
+                </tr>
+                {%endif%}
+                {%endfor%}
+            </tbody>
+        </table>
+        {%endif%}
+    </section>
+</main>
+
+<h3>Closed Services</h3>
+<main class="my-container">
+    <section id="service-history">
+        {%if reqs%}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Customer Name</th>
+                    <th>Pincode</th>
                     <th>Address</th>
                     <th>Date</th>
                     <th>Rating</th>
                 </tr>
             </thead>
             <tbody>
+                {%for req,user in reqs%}
+                {%if req.service_status == 'closed'%}
                 <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td>06/07/23</td>
-                    <td>5/10</td>
+                    <td>{{req.id}}</td>
+                    <td>{{req.service.name}}</td>
+                    <td>{{req.customer.name}}</td>
+                    <td>{{req.customer.pincode}}</td>
+                    <td>{{req.customer.address}}</td>
+                    <td>{{req.date_of_completion}}</td>  
+                    <td>{{req.remarks}}</td>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td>06/07/23</td>
-                    <td>5/10</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>House Cleaning</td>
-                    <td>John Doe</td>
-                    <td>123-456-7890</td>
-                    <td>virat nagar</td>
-                    <td>06/07/23</td>
-                    <td>5/10</td>
-                </tr>
+                {%endif%}
+                {%endfor%}
             </tbody>
         </table>
+        {%endif%}
     </section>
 </main>
-
+{%elif prof.approved == 0%}
+<main class="my-container">
+    <h3>Account Not Approved</h3>
+</main>
+{%endif%}
+{%elif prof.blocked == 1%}
+<main class="my-container">
+    <h3>Account Blocked</h3>
+    <p>Contact our Team if it was a mistake.</p>
+</main>
+{%endif%}
 <footer>
     <p>&copy; 2024 A to Z Household Services. All rights reserved.</p>
 </footer>
