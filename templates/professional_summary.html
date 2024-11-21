@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Professional Summary</title>
+    <link rel="stylesheet" href="/static/main.css"> 
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <span>Welcome to Service Professional</span> 
+        </div>
+        <ul class="navbar-links">
+            <li><a href="/spdashboard/{{professional.id}}">Home</a></li>
+            <li><a href="#">Summary</a></li>
+        </ul>
+        <div class="navbar-right">
+            <a href="/splogin" class="btn btn-logout">Logout</a> 
+        </div>
+    </nav>
+    <h1>Welcome, {{ professional.name }}</h1>
+    <p>Total Requests Handled: {{ total_requests }}</p>
+    <p>Assigned Requests: {{ assigned_requests }}</p>
+    <p>Completed Requests: {{ completed_requests }}</p>
+
+    <h2>Service Request Status Distribution</h2>
+    <img src="{{ chart_url }}" alt="Service Status Chart" />
+    <footer>
+        <p>&copy; 2024 A to Z Household Services. All rights reserved.</p>
+    </footer>
+</body>
+</html>

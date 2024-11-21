@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Summary</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <span>Welcome to Admin</span> 
+        </div>
+        <ul class="navbar-links">
+            <li><a href="/admin/dashboard">Home</a></li>
+            <li><a href="/admin/search">Search</a></li>
+            <li><a href="/admin/summary">Summary</a></li>
+        </ul>
+        <div class="navbar-right">
+            <a href="/admin/login" class="btn btn-logout">Logout</a> 
+        </div>
+    </nav>
+    <h1>Admin Summary</h1>
+
+    <h2>Summary</h2>
+    <p>Total Professionals: {{ total_professionals }}</p>
+    <p>Total Customers: {{ total_customers }}</p>
+    <p>Total Requests: {{ total_requests }}</p>
+
+    <h2>Service Requests per Service</h2>
+    <img src="{{ chart_url }}" alt="Service Requests Chart" />
+    <footer>
+        <p>&copy; 2024 A to Z Household Services. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
