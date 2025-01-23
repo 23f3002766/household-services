@@ -31,7 +31,7 @@ def admin_login():
         user = User.query.filter_by(username=user, password=pwd).first()
         print(user)
         if user and user.role == 'admin':
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('admin_dashboard',msg='Invalid Credentials'))
         print('Invalid credentials!')
     return render_template("admin_login.html")
 

@@ -3,6 +3,10 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
+# Comment Test 
+
+
 # User Base Model
 class User(db.Model):
     __tablename__ = 'users'
